@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <title>Pokedados</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/de4adcc49b.js" crossorigin="anonymous"></script>
+
+    <style>
+      body {
+        background-color: black;
+      }
+
+      img {
+        width: 500px;
+      }
+
+      strong {
+        color: aqua;
+      }
+    </style>
+
+    <script>
+      function dadosPokemon() {
+        let url = "https://pokeapi.co/api/v2/pokemon/" + document.getElementById('nomePokemon').value
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", url)
+        console.log(url)
+        
+        xmlHttp.send()
+				xmlHttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            let dadosJSONText = xmlHttp.responseText
+						let dadosJSONObj = JSON.parse(dadosJSONText)
+
+            //Preenchimento da primeira coluna
+            document.getElementById('nome').innerHTML = "<strong>Nome: </strong>" + dadosJSONObj.name.toUpperCase()
+            document.getElementById('numero').innerHTML = "<strong>Nº pokédex: </strong>" + dadosJSONObj.order
+
+            let golpes = ""
+            for (let i in dadosJSONObj.abilities) {
+              if (golpes) {
+                golpes += ", "
+              } 
+              golpes += dadosJSONObj.abilities[i].ability.name
+            }
+            document.getElementById('golpes').innerHTML = "<strong>Golpes: </strong>"  + golpes.toUpperCase()
+
+            let tipos = ""
+            for (let i in dadosJSONObj.types) {
+              if (tipos) {
+                tipos += ", "
+              }
+              tipos += dadosJSONObj.types[i].type.name
+            }
+            document.getElementById('tipos').innerHTML = "<strong>Tipos: </strong>" + tipos.toUpperCase()
+
+            //Preenchimento da segunda coluna
+            document.getElementById('img_poke').innerHTML = ""
+            document.getElementById('img_poke_shiny').innerHTML = ""
+            let imgPoke = document.createElement('img')
+            let imgPokeShiny = document.createElement('img')
+            imgPoke.src = dadosJSONObj.sprites.front_default
+            imgPoke.className = "img-fluid"
+            imgPoke.style.marginTop = -85 + "px"
+            imgPokeShiny.src = dadosJSONObj.sprites.front_shiny
+            imgPokeShiny.className = "img-fluid"
+            imgPokeShiny.style.marginTop = -30 + "px"
+            document.getElementById('img_poke').appendChild(imgPoke)
+            document.getElementById('img_poke_shiny').appendChild(imgPokeShiny)
+
+            //Preenchimento da terceira coluna
+            document.getElementById('hp').innerHTML = "<strong>HP: </strong>" + dadosJSONObj.stats[0].base_stat
+            document.getElementById('ataque').innerHTML = "<strong>Ataque: </strong>" + dadosJSONObj.stats[1].base_stat
+            document.getElementById('defesa').innerHTML = "<strong>Defesa: </strong>" + dadosJSONObj.stats[2].base_stat
+            document.getElementById('velocidade').innerHTML = "<strong>Velocidade: </strong>" + dadosJSONObj.stats[5].base_stat
+            console.log(dadosJSONObj)
+          }
+        }
+      } 
+    </script>
+  </head>
+  <body>
+      
+    <div class="container">
+      <div class="row">
+        <div class="col text-center">
+          <img src="Pokemon-logo.jpg" alt="logo pokémon">
+        </div>
+      </div>
+
+      <div class="row form-group justify-content-center mb-5 pb-5">
+        <div class="col-3 text-center">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Nome ou nº do pokémon" id="nomePokemon">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-primary" onclick="dadosPokemon()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row justify-content-center">
+        <div class="col-md-3 text-center">
+          <p class="text-warning" id="nome"></p>
+          <p class="text-warning" id="numero"></p>
+          <p class="text-warning" id="golpes"></p>
+          <p class="text-warning" id="tipos"></p>
+        </div>
+
+        <div class="col-12 col-lg-3 text-center">
+          <div id="img_poke">
+          </div>
+          <div id="img_poke_shiny">  
+          </div>
+        </div>
+
+        <div class="col-md-3 text-center">
+          <p class="text-warning" id="hp"></p>
+          <p class="text-warning" id="ataque"></p>
+          <p class="text-warning" id="defesa"></p>
+          <p class="text-warning" id="velocidade"></p>
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
